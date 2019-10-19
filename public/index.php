@@ -1,4 +1,11 @@
 <?php
 
+use Framework\Http\Request;
 
-echo 'lol' . PHP_EOL;
+require __DIR__ . '/../vendor/autoload.php';
+
+$request = new Request();
+
+$name = $request->getQueryParams()['name'] ?? 'guest';
+
+echo 'Hello ' . $name . '!';
