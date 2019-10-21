@@ -9,14 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $_GET = [];
-        $_POST = [];
-    }
-
     public function testEmpty(): void
     {
         $request = new Request();
@@ -32,9 +24,8 @@ class RequestTest extends TestCase
             'age' => 28,
         ];
 
-        $_GET = $data;
-
-        $request = new Request();
+        $request = (new Request())
+            ->withQueryParams($data);
 
         $this->assertEquals($data, $request->getQueryParams());
         $this->assertNull($request->getParsedBody());
@@ -44,9 +35,8 @@ class RequestTest extends TestCase
     {
         $data = ['title' => 'Title'];
 
-        $_POST = $data;
-
-        $request = new Request();
+        $request = (new Request())
+            ->withParsedBody($data);
 
         $this->assertEquals([], $request->getQueryParams());
         $this->assertEquals($data, $request->getParsedBody());
