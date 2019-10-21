@@ -1,12 +1,10 @@
 <?php
 
-use Framework\Http\Request;
+use Framework\Http\RequestFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$request = (new Request())
-    ->withQueryParams($_GET)
-    ->withParsedBody($_POST);
+$request = RequestFactory::fromGlobals();
 
 $name = $request->getQueryParams()['name'] ?? 'guest';
 
