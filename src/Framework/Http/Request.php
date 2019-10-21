@@ -23,7 +23,7 @@ class Request
 
     public function getParsedBody(): ?array
     {
-        return $this->parsedBody;
+        return $this->parsedBody ?: null;
     }
 
     public function withParsedBody(?array $data): self
