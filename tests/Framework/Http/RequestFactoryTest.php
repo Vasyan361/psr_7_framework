@@ -12,7 +12,7 @@ class RequestFactoryTest extends TestCase
     {
         $request = RequestFactory::fromGlobals();
 
-        $this->assertTrue($request instanceof Request);
+        $this->assertInstanceOf(Request::class, $request);
         $this->assertEquals([], $request->getQueryParams());
         $this->assertNull($request->getParsedBody());
     }
@@ -26,7 +26,7 @@ class RequestFactoryTest extends TestCase
 
         $request = RequestFactory::fromGlobals($data);;
 
-        $this->assertTrue($request instanceof Request);
+        $this->assertInstanceOf(Request::class, $request);
         $this->assertEquals($data, $request->getQueryParams());
         $this->assertNull($request->getParsedBody());
     }
@@ -37,7 +37,7 @@ class RequestFactoryTest extends TestCase
 
         $request = RequestFactory::fromGlobals([], $data);
 
-        $this->assertTrue($request instanceof Request);
+        $this->assertInstanceOf(Request::class, $request);
         $this->assertEquals([], $request->getQueryParams());
         $this->assertEquals($data, $request->getParsedBody());
     }
