@@ -30,7 +30,7 @@ class Request implements ServerRequestInterface
         return $this->parsedBody ?: null;
     }
 
-    public function withParsedBody(?array $data): self
+    public function withParsedBody($data): self
     {
         $new = clone $this;
         $new->parsedBody = $data;
