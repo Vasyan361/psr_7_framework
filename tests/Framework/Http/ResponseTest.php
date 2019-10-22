@@ -13,7 +13,7 @@ class ResponseTest extends TestCase
 
         $response = new Response($body);
 
-        $this->assertEquals($body, $response->getBody());
+        $this->assertEquals($body, $response->getBody()->getContents());
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('OK', $response->getReasonPhrase());
     }
@@ -25,7 +25,7 @@ class ResponseTest extends TestCase
 
         $response = new Response($body, $status);
 
-        $this->assertEquals($body, $response->getBody());
+        $this->assertEquals($body, $response->getBody()->getContents());
         $this->assertEquals($status, $response->getStatusCode());
         $this->assertEquals('Not Found', $response->getReasonPhrase());
     }
@@ -36,6 +36,6 @@ class ResponseTest extends TestCase
             ->withHeader($name1 = 'X-Header-1', $value1 = 'value_1')
             ->withHeader($name2 = 'X-Header-2', $value2 = 'value_2');
 
-        $this->assertEquals([$name1 => $value1, $name2 => $value2], $response->getHeaders());
+        $this->assertEquals([$name1 => [$value1], $name2 => [$value2]], $response->getHeaders());
     }
 }

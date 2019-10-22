@@ -3,6 +3,7 @@
 namespace Framework\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class Response implements ResponseInterface
 {
@@ -25,16 +26,16 @@ class Response implements ResponseInterface
 
     public function __construct($body, $statusCode = 200)
     {
-        $this->body = $body;
+        $this->body = $body instanceof StreamInterface ? $body : new Stream($body);
         $this->statusCode = $statusCode;
     }
 
-    public function getBody(): string
+    public function getBody(): StreamInterface
     {
         return $this->body;
     }
 
-    public function withBody(string $body): self
+    public function withBody(StreamInterface $body): self
     {
         $new = clone $this;
         $new->body = $body;
@@ -56,7 +57,7 @@ class Response implements ResponseInterface
         return $this->reasonPhrase;
     }
 
-    public function withStatus(int  $code, string $reasonPhrase = ''): self
+    public function withStatus($code, $reasonPhrase = ''): self
     {
         $new = clone $this;
         $new->statusCode = $code;
@@ -70,28 +71,28 @@ class Response implements ResponseInterface
         return $this->headers;
     }
 
-    public function hasHeader(string $header): bool
+    public function hasHeader($name): bool
     {
-        return isset($this->headers[$header]);
+        return isset($this->headers[$name]);
     }
 
-    public function getHeader($header): ?string
+    public function getHeader($name): ?string
     {
-        if ($this->hasHeader($header)) {
-            return $this->headers[$header];
+        if ($this->hasHeader($name)) {
+            return $this->headers[$name];
         }
 
         return null;
     }
 
-    public function withHeader($header, $value): self
+    public function withHeader($name, $value): self
     {
         $new = clone $this;
 
-        if ($new->hasHeader($header)) {
-            unset($new->headers[$header]);
+        if ($new->hasHeader($name)) {
+            unset($new->headers[$name]);
         }
-        $new->headers[$header] = $value;
+        $new->headers[$name] = (array)$value;
 
         return $new;
     }
@@ -150,41 +151,18 @@ class Response implements ResponseInterface
         // TODO: Implement getHeaderLine() method.
     }
 
-    /**
-     * Return an instance with the specified header appended with the given value.
-     *
-     * Existing values for the specified header will be maintained. The new
-     * value(s) will be appended to the existing list. If the header did not
-     * exist previously, it will be added.
-     *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return an instance that has the
-     * new header and/or value.
-     *
-     * @param string $name Case-insensitive header field name to add.
-     * @param string|string[] $value Header value(s).
-     * @return static
-     * @throws \InvalidArgumentException for invalid header names or values.
-     */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value): self
     {
-        // TODO: Implement withAddedHeader() method.
+        $new = clone $this;
+        $new->headers[$name] = array_merge($new->headers[$name], (array)$value);
+        return $new;
     }
-
-    /**
-     * Return an instance without the specified header.
-     *
-     * Header resolution MUST be done without case-sensitivity.
-     *
-     * This method MUST be implemented in such a way as to retain the
-     * immutability of the message, and MUST return an instance that removes
-     * the named header.
-     *
-     * @param string $name Case-insensitive header field name to remove.
-     * @return static
-     */
-    public function withoutHeader($name)
+    public function withoutHeader($name): self
     {
-        // TODO: Implement withoutHeader() method.
+        $new = clone $this;
+        if ($new->hasHeader($name)) {
+            unset($new->headers[$name]);
+        }
+        return $new;
     }
 }
