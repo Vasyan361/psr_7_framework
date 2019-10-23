@@ -4,14 +4,14 @@
 namespace Tests\Framework\Http;
 
 
-use Framework\Http\Request;
 use PHPUnit\Framework\TestCase;
+use Zend\Diactoros\ServerRequest;
 
 class RequestTest extends TestCase
 {
     public function testEmpty(): void
     {
-        $request = new Request();
+        $request = new ServerRequest();
 
         $this->assertEquals([], $request->getQueryParams());
         $this->assertNull($request->getParsedBody());
@@ -24,7 +24,7 @@ class RequestTest extends TestCase
             'age' => 28,
         ];
 
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withQueryParams($data);
 
         $this->assertEquals($data, $request->getQueryParams());
@@ -35,7 +35,7 @@ class RequestTest extends TestCase
     {
         $data = ['title' => 'Title'];
 
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withParsedBody($data);
 
         $this->assertEquals([], $request->getQueryParams());

@@ -2,8 +2,9 @@
 
 namespace Tests\Framework\Http;
 
-use Framework\Http\Response;
 use PHPUnit\Framework\TestCase;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\HtmlResponse;
 
 class ResponseTest extends TestCase
 {
@@ -11,7 +12,7 @@ class ResponseTest extends TestCase
     {
         $body = 'Body';
 
-        $response = new Response($body);
+        $response = new HtmlResponse($body);
 
         $this->assertEquals($body, $response->getBody()->getContents());
         $this->assertEquals(200, $response->getStatusCode());
@@ -23,7 +24,7 @@ class ResponseTest extends TestCase
         $body = 'Empty';
         $status = 404;
 
-        $response = new Response($body, $status);
+        $response = new HtmlResponse($body, $status);
 
         $this->assertEquals($body, $response->getBody()->getContents());
         $this->assertEquals($status, $response->getStatusCode());
@@ -32,7 +33,7 @@ class ResponseTest extends TestCase
 
     public function testHeaders()
     {
-        $response = (new Response(''))
+        $response = (new Response())
             ->withHeader($name1 = 'X-Header-1', $value1 = 'value_1')
             ->withHeader($name2 = 'X-Header-2', $value2 = 'value_2');
 
